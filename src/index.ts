@@ -44,13 +44,16 @@ export interface ServiceWorkerConfig {
    * `true` for first time setup and when debugging your application's service worker.
    */
   enableWorkboxLogging?: boolean;
+  /**
+   * Options to configure registration of the service worker on the client.
+   */
   registration?: {
     /**
      * Autoregister the service worker.
      *
      * If `false`, then the application must initialize the service worker by invoking `register`.
      * Set this to `false` if you'd like to take control over when you service worker is initialized. You'll
-     * then need to add something like this to your application:
+     * then need to add something like the following to your application:
      *
      * ```js
      * import { Workbox } from 'workbox-window';
@@ -70,8 +73,7 @@ export interface ServiceWorkerConfig {
      *
      * Generally this will be something like 'main'.
      *
-     * Defaults to the first entry there is only one entry. Otherwise, throws an
-     * error.
+     * Defaults to `main`. https://webpack.js.org/concepts/entry-points/#single-entry-shorthand-syntax.
      */
     entry?: string;
     /**
@@ -120,6 +122,9 @@ const schema: Schema = {
         autoRegister: {
           type: "boolean",
         },
+        entry: {
+          type: "string",
+        },
         scope: {
           type: "string",
         },
@@ -128,6 +133,9 @@ const schema: Schema = {
         },
       },
       additionalProperties: false,
+    },
+    workbox: {
+      type: "object",
     },
   },
   additionalProperties: false,
@@ -156,13 +164,15 @@ class ServiceWorkerPlugin {
       compiler.options.output.path ?? "",
       DEFAULT_SW_NAME
     );
+    // https://webpack.js.org/concepts/entry-points/#single-entry-shorthand-syntax
+    const DEFAULT_ENTRY = "main";
 
     const {
       enableInDevelopment = false,
       enableWorkboxLogging = undefined,
       workbox = {},
       registration: {
-        entry: registrationEntry,
+        entry: registrationEntry = DEFAULT_ENTRY,
         path = `./${DEFAULT_SW_NAME}`,
         scope,
         autoRegister = true,
@@ -187,17 +197,12 @@ class ServiceWorkerPlugin {
 
       compiler.options.entry = () =>
         entry.then((e) => {
-          if (!registrationEntry && Object.keys(e).length > 1) {
-            throw new Error(
-              "A webpack entry must be specified when autoRegister is enabled and the webpack.config.js specifies multiple entries. autoRegister is enabled by default. See https://github.com/tatethurston/service-worker-webpack for configuration options."
-            );
-          }
-          const injectIntoEntry = registrationEntry ?? Object.keys(e)[0];
-          const injectEntry: typeof e[string] | undefined = e[injectIntoEntry];
+          const injectEntry: typeof e[string] | undefined =
+            e[registrationEntry];
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (!injectEntry?.import) {
             throw new Error(
-              `Could not find the webpack entry '${injectIntoEntry}' to inject autoRegister code into. See https://github.com/tatethurston/service-worker-webpack for configuration options.`
+              `Could not find the webpack entry '${registrationEntry}' to inject autoRegister code into. See https://github.com/tatethurston/service-worker-webpack for configuration options.`
             );
           }
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

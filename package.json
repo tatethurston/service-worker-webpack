@@ -14,8 +14,8 @@
   "version": "0.0.2",
   "main": "dist/index.js",
   "files": [
-    "dist/index.d.ts",
-    "dist/*.js"
+    "dist/*.js",
+    "dist/index.d.ts"
   ],
   "scripts": {
     "build": "yarn clean && yarn tsc",
@@ -55,11 +55,11 @@
     "webpack": "^5.35.0"
   },
   "keywords": [
-    "webpack",
-    "plugin",
     "offline",
+    "plugin",
     "pwa",
     "service worker",
+    "webpack",
     "workbox"
   ],
   "husky": {
