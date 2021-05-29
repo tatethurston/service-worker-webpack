@@ -32,11 +32,7 @@ Workbox is great -- it's well documented and straightforward to customize your s
 
    `yarn add -D service-worker-webpack`
 
-2. Add [workbox-window](https://www.npmjs.com/package/workbox-window) if opting into `autoRegister` (default)
-
-   `yarn add workbox-window`
-
-3. Update your `webpack.config.js`:
+2. Update your `webpack.config.js`:
 
    ```js
    const ServiceWorkerPlugin = require("service-worker-webpack-plugin");
