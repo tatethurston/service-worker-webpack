@@ -24,7 +24,7 @@ export interface ServiceWorkerConfig {
   /**
    * Enable workbox logging.
    *
-   * Workbox logging is both very helpful and very chatty. By default, workbox will use the webpack mode to determine whether or not to enable workbox logging. When the mode is 'production', then logging is disabled. Otherwise, logging is enabled.
+   * Workbox logging is both very helpful and very chatty. By default, workbox will use the webpack mode to determine whether or not to enable workbox logging. When the mode is `production`, then logging is disabled. Otherwise, logging is enabled.
    *
    * Setting this to `true` enables workbox logging when the webpack `mode` is set to `production`. Setting this to `false` will disable workbox logging, which is likely preferred when not debugging your servicer worker.
    *
@@ -57,25 +57,21 @@ export interface ServiceWorkerConfig {
     /**
      * The webpack [entry](https://webpack.js.org/concepts/entry-points/) to inject the auto registration code into. The resulting bundle must be present on all pages that expect to register the service worker.
      *
-     * Defaults to `main`. https://webpack.js.org/concepts/entry-points/#single-entry-shorthand-syntax.
+     * Defaults to `main`, the [default entry](https://webpack.js.org/concepts/entry-points/#single-entry-shorthand-syntax.)
      */
     entry?: string;
     /**
-     * The scope of the service worker determines which files the service worker controls, in other words, from which path the service worker will intercept requests. The default scope is the location of the service worker file, and extends to all directories below. So if service-worker.js is located in the root directory, the service worker will control requests from all files at this domain.
-     *
-     * https://developers.google.com/web/ilt/pwa/introduction-to-service-worker#registration_and_scope
-     *
-     * Defaults to `undefined` which sets the default scope as described above.
-     */
-    scope?: string;
-    /*
-     * The registration path tells the browser where your service worker is located.
-     *
-     * https://developers.google.com/web/ilt/pwa/introduction-to-service-worker#registration_and_scope
+     * The [registration path](https://developers.google.com/web/ilt/pwa/introduction-to-service-worker#registration_and_scope) tells the browser where your service worker is located.
      *
      * Defaults to `/service-worker.js`.
      */
     path?: string;
+    /**
+     * The [scope](https://developers.google.com/web/ilt/pwa/introduction-to-service-worker#registration_and_scope) of the service worker determines which files the service worker controls, in other words, from which path the service worker will intercept requests. The default scope is the location of the service worker file, and extends to all directories below. So if service-worker.js is located in the root directory, the service worker will control requests from all files at this domain.
+     *
+     * Defaults to `undefined` which sets the default scope as described above.
+     */
+    scope?: string;
   };
   /**
    * Options passed to `worbox-webpack-plugin`. See all available configuration options [here](https://developers.google.com/web/tools/workbox/modules/workbox-webpack-plugin).
