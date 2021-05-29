@@ -25,11 +25,11 @@
     "lint:fix:md": "prettier --write *.md",
     "lint:fix:package": "prettier-package-json --write ./package.json",
     "lint:fix:ts": "eslint --fix './src/**/*.ts{,x}'",
+    "prepack": "yarn run build",
     "test": "yarn build && jest --testTimeout 5000 --rootDir dist",
     "typecheck": "yarn tsc --noEmit",
     "typecheck:watch": "yarn typecheck --watch",
-    "version": "yarn run build && git add -A package.json",
-    "postversion": "git push && git push --tags"
+    "postversion": "git add --all package.json && git push && git push --tags"
   },
   "types": "dist/index.d.ts",
   "dependencies": {
