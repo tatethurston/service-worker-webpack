@@ -42,14 +42,14 @@ export interface ServiceWorkerConfig {
      *
      * If `false`, then the application must initialize the service worker by invoking `register`. Set this to `false` if you'd like to take control over when you service worker is initialized. You'll then need to add something like the following to your application:
      *
-     * <pre><code>
+     * ```javascript
      * import { Workbox } from 'workbox-window';
      *
      * if ('serviceWorker' in navigator) {
      *   const wb = new Workbox('/path-to-your-service-worker.js');
      *   wb.register();
      * }
-     * </code></pre>
+     * ```
      *
      * Defaults to `true`. Recommended: `true`.
      */
@@ -121,7 +121,7 @@ function isInjectManifest(
   return "swSrc" in workboxConfig;
 }
 
-class ServiceWorkerPlugin {
+export class ServiceWorkerPlugin {
   config: ServiceWorkerConfig;
 
   constructor(options: ServiceWorkerConfig = {}) {
@@ -211,5 +211,3 @@ class ServiceWorkerPlugin {
     }
   }
 }
-
-module.exports = ServiceWorkerPlugin;

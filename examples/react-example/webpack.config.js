@@ -1,5 +1,5 @@
 const path = require("path");
-const ServiceWorkerPlugin = require("service-worker-webpack-plugin");
+const { ServiceWorkerPlugin } = require("service-worker-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.tsx",

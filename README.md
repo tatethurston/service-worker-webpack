@@ -35,7 +35,7 @@ Workbox is great -- it's well documented and straightforward to customize your s
 2. Update your `webpack.config.js`:
 
    ```js
-   const ServiceWorkerPlugin = require("service-worker-webpack-plugin");
+   const { ServiceWorkerPlugin } = require("service-worker-webpack");
 
    module.exports = {
      plugins: [new ServiceWorkerPlugin()],
