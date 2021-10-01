@@ -147,8 +147,8 @@ export class ServiceWorkerPlugin {
       workbox = {},
       registration: {
         entry: registrationEntry = DEFAULT_ENTRY,
-        path = `./${DEFAULT_SW_NAME}`,
-        scope,
+        path = `/${DEFAULT_SW_NAME}`,
+        scope = undefined,
         autoRegister = true,
       } = {},
     } = this.config;
