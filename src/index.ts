@@ -1,6 +1,6 @@
 import { join } from "path";
 import { validate } from "schema-utils";
-import type { Compiler } from "webpack";
+import webpack, { Compiler } from "webpack";
 import {
   GenerateSW,
   GenerateSWOptions,
@@ -158,7 +158,7 @@ export class ServiceWorkerPlugin {
     }
 
     if (autoRegister) {
-      new compiler.webpack.DefinePlugin({
+      new webpack.DefinePlugin({
         __SERVICE_WORKER_SW_DEST__: JSON.stringify(path),
         __SERVICE_WORKER_SCOPE__: JSON.stringify(scope),
       }).apply(compiler);
