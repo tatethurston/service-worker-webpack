@@ -1485,7 +1485,7 @@ convert-source-map@^1.7.0:
   dependencies:
     safe-buffer "~5.1.1"
 
-copy-webpack-plugin@^6.4.0:
+copy-webpack-plugin@^6.4.1:
   version "6.4.1"
   resolved "https://registry.yarnpkg.com/copy-webpack-plugin/-/copy-webpack-plugin-6.4.1.tgz#138cd9b436dbca0a6d071720d5414848992ec47e"
   integrity sha512-MXyPCjdPVx5iiWyl40Va3JGh27bKzOTNY3NjUTrosD2q7dR/cLD0013uqJ3BpFbUjyONINjb6qI7nDIJujrMbA==
@@ -2547,12 +2547,12 @@ serialize-javascript@^5.0.1:
   dependencies:
     randombytes "^2.1.0"
 
-service-worker-webpack@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/service-worker-webpack/-/service-worker-webpack-0.0.1.tgz#d5256385e97466ad83a9aa60c76471e7fd641b89"
-  integrity sha512-z/gkcr/jA7wnQrP8vJOVntk4bKlswcUqkzehVGwmDbhWH9TJV6reD4ykSRYDr9fgsh0MC0rkb8LRePU3Xkhh8Q==
+service-worker-webpack@0.0.8-alpha.0:
+  version "0.0.8-alpha.0"
+  resolved "https://registry.yarnpkg.com/service-worker-webpack/-/service-worker-webpack-0.0.8-alpha.0.tgz#211bbd6fc1fe0a19c4bd98d7e4a5c291d9f01ea9"
+  integrity sha512-ezLV5/8Rr8FAZfINmn70jZon1HMsex18o46me5ygr7hOU2L20yNzlR6Vr+5Ttr/UpN6a+Pd/6z4g19OUro00Ng==
   dependencies:
-    copy-webpack-plugin "^6.4.0"
+    copy-webpack-plugin "^6.4.1"
     schema-utils "^3.0.0"
     workbox-webpack-plugin "^6.1.5"
     workbox-window "^6.1.5"

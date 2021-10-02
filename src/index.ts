@@ -184,8 +184,8 @@ function injectEntryWebpack4Compat(
         return;
       }
       case "function": {
-        void Promise.resolve(entry()).then(() => {
-          injectEntry(entry, entryName, inject);
+        void Promise.resolve(entry()).then((e) => {
+          injectEntry(e, entryName, inject);
         });
         return;
       }
@@ -244,14 +244,12 @@ export class ServiceWorkerPlugin {
       const autoRegisterJS = join(__dirname, "autoRegister.js");
 
       if (!webpack.version || webpack.version.startsWith("4")) {
-        console.debug("Using workbox4");
         injectEntryWebpack4Compat(
           compiler.options,
           registrationEntry,
           autoRegisterJS
         );
       } else {
-        console.debug("Using workbox5");
         injectEntryWebpack5Compat(
           compiler.options,
           registrationEntry,
