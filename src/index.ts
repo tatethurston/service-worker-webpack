@@ -156,13 +156,9 @@ function injectEntryWebpack4Compat(
   entryName: string,
   inject: string
 ): void {
-  const entry = options.entry;
-
-  function injectEntry(
-    entry: Configuration["entry"],
-    entryName: string,
-    inject: string
-  ) {
+  async function injectEntry(
+    entry: Configuration["entry"]
+  ): Promise<string[] | webpack.Entry> {
     switch (typeof entry) {
       case "undefined": {
         throw new Error(
@@ -170,24 +166,23 @@ function injectEntryWebpack4Compat(
         );
       }
       case "string": {
-        options.entry = [entry, inject];
-        return;
+        return [inject, entry];
       }
       case "object": {
         if (Array.isArray(entry)) {
           if (!entry.includes(inject)) {
-            entry.unshift(inject);
+            return [inject, ...entry];
           }
+          return entry;
         } else {
-          injectEntry(entry, entryName, inject);
+          return {
+            ...entry,
+            [entryName]: (injectEntry(entry[entryName]) as unknown) as string[],
+          };
         }
-        return;
       }
       case "function": {
-        void Promise.resolve(entry()).then((e) => {
-          injectEntry(e, entryName, inject);
-        });
-        return;
+        return await Promise.resolve(entry()).then(injectEntry);
       }
       default: {
         const _exhaust: never = entry;
@@ -196,7 +191,7 @@ function injectEntryWebpack4Compat(
     }
   }
 
-  injectEntry(entry, entryName, inject);
+  options.entry = () => injectEntry(options.entry);
 }
 
 export class ServiceWorkerPlugin {
