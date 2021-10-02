@@ -18,6 +18,8 @@
 
 A minimal wrapper around [Workbox](https://developers.google.com/web/tools/workbox) to quickly add a [service worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API) via your webpack build process.
 
+Compatible with Webpack 4 and Webpack 5.
+
 ## Motivation
 
 Workbox is great -- it's well documented and straightforward to customize your service worker. [workbox-webpack-plugin](https://www.npmjs.com/package/workbox-webpack-plugin) makes caching your webpack assets simple, but I found myself reimplementing the same patterns across projects. Specifically:
@@ -163,11 +165,13 @@ Defaults to `GenerateSW` which will generate a service worker with the workbox r
 
 Check out the [service-worker-webpack-example](https://github.com/tatethurston/service-worker-webpack/blob/master/examples/react-example/).
 
-## Warning ⚠️
+## Common Service Worker Pitfalls ⚠️
 
-You must serve your application over HTTPS in production environments. [Service Workers must be served from the site's origin over HTTPS](https://developers.google.com/web/fundamentals/primers/service-workers). A special case is made for `localhost`, so this is generally not necessary during local development. HTTPS is _not_ handled by this library.
+You must serve your next application over HTTPS in production environments. [Service Workers must be served from the site's origin over HTTPS](https://developers.google.com/web/fundamentals/primers/service-workers).
 
-The origin constraint means that the service worker can not control `mysite.com` if it was served from something like `mycdn.mysite.com`.
+Most browsers make special case `localhost`, so this is generally not necessary during local development. HTTPS is _not_ handled by this library.
+
+The service worker origin constraint means that the service worker can not control `mysite.com` if it was served from a subdomain such as `mycdn.mysite.com`.
 
 ## Contributing 👫
 
