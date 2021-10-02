@@ -1,6 +1,7 @@
 import { join } from "path";
 import { validate } from "schema-utils";
-import webpack, { Compiler } from "webpack";
+import webpack from "webpack";
+import type { Compiler, Configuration } from "webpack";
 import {
   GenerateSW,
   GenerateSWOptions,
@@ -121,6 +122,83 @@ function isInjectManifest(
   return "swSrc" in workboxConfig;
 }
 
+/* eslint-disable */
+function injectEntryWebpack5Compat(
+  options: Compiler["options"],
+  entryName: string,
+  inject: string
+): void {
+  const entry: any =
+    typeof options.entry === "function"
+      ? options.entry()
+      : Promise.resolve(options.entry);
+
+  options.entry = () =>
+    entry.then((e: any) => {
+      const injectEntry: typeof e[string] | undefined = e[entryName];
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (!injectEntry?.import) {
+        throw new Error(
+          `Could not find the webpack entry '${entryName}' to inject autoRegister code into. See https://github.com/tatethurston/service-worker-webpack for configuration options.`
+        );
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (!injectEntry.import.includes(inject)) {
+        injectEntry.import.unshift(inject);
+      }
+      return e;
+    });
+}
+/* eslint-enable */
+
+function injectEntryWebpack4Compat(
+  options: Compiler["options"],
+  entryName: string,
+  inject: string
+): void {
+  const entry = options.entry;
+
+  function injectEntry(
+    entry: Configuration["entry"],
+    entryName: string,
+    inject: string
+  ) {
+    switch (typeof entry) {
+      case "undefined": {
+        throw new Error(
+          `Could not find the webpack entry '${entryName}' to inject autoRegister code into. See https://github.com/tatethurston/service-worker-webpack for configuration options.`
+        );
+      }
+      case "string": {
+        options.entry = [entry, inject];
+        return;
+      }
+      case "object": {
+        if (Array.isArray(entry)) {
+          if (!entry.includes(inject)) {
+            entry.unshift(inject);
+          }
+        } else {
+          injectEntry(entry, entryName, inject);
+        }
+        return;
+      }
+      case "function": {
+        void Promise.resolve(entry()).then(() => {
+          injectEntry(entry, entryName, inject);
+        });
+        return;
+      }
+      default: {
+        const _exhaust: never = entry;
+        return _exhaust;
+      }
+    }
+  }
+
+  injectEntry(entry, entryName, inject);
+}
+
 export class ServiceWorkerPlugin {
   config: ServiceWorkerConfig;
 
@@ -135,7 +213,7 @@ export class ServiceWorkerPlugin {
   apply(compiler: Compiler): void {
     const DEFAULT_SW_NAME = "service-worker.js";
     const DEFAULT_SW_DEST = join(
-      compiler.options.output.path ?? "",
+      compiler.options.output?.path ?? "",
       DEFAULT_SW_NAME
     );
     // https://webpack.js.org/concepts/entry-points/#single-entry-shorthand-syntax
@@ -164,27 +242,22 @@ export class ServiceWorkerPlugin {
       }).apply(compiler);
 
       const autoRegisterJS = join(__dirname, "autoRegister.js");
-      const entry =
-        typeof compiler.options.entry === "function"
-          ? compiler.options.entry()
-          : Promise.resolve(compiler.options.entry);
 
-      compiler.options.entry = () =>
-        entry.then((e) => {
-          const injectEntry: typeof e[string] | undefined =
-            e[registrationEntry];
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          if (!injectEntry?.import) {
-            throw new Error(
-              `Could not find the webpack entry '${registrationEntry}' to inject autoRegister code into. See https://github.com/tatethurston/service-worker-webpack for configuration options.`
-            );
-          }
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          if (!injectEntry.import.includes(autoRegisterJS)) {
-            injectEntry.import.unshift(autoRegisterJS);
-          }
-          return e;
-        });
+      if (!webpack.version || webpack.version.startsWith("4")) {
+        console.debug("Using workbox4");
+        injectEntryWebpack4Compat(
+          compiler.options,
+          registrationEntry,
+          autoRegisterJS
+        );
+      } else {
+        console.debug("Using workbox5");
+        injectEntryWebpack5Compat(
+          compiler.options,
+          registrationEntry,
+          autoRegisterJS
+        );
+      }
     }
 
     if (compiler.options.mode === "development" && !enableInDevelopment) {
@@ -195,7 +268,9 @@ export class ServiceWorkerPlugin {
             to: workbox.swDest,
           },
         ],
-      }).apply(compiler);
+        // TODO: Look into type definition mismatch
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      }).apply(compiler as any);
     } else {
       if (isInjectManifest(workbox)) {
         new InjectManifest(workbox).apply(compiler);
