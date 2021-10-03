@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/tatethurston/service-worker-webpack/issues"
   },
-  "version": "0.0.10",
+  "version": "0.0.11",
   "main": "dist/index.js",
   "files": [
     "dist/*.js",
