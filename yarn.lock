@@ -5587,6 +5587,13 @@ webidl-conversions@^6.1.0:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-6.1.0.tgz#9111b4d7ea80acd40f5270d666621afa78b69514"
   integrity sha512-qBIvFLGiBpLjfwmYAaHPXsn+ho5xZnGvyGvsarywGNc8VyQJUMHJ8OBKGGrPER0okBeMDaan4mNBlgBROxuI8w==
 
+webpack-inject-entry-plugin@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/webpack-inject-entry-plugin/-/webpack-inject-entry-plugin-0.0.2.tgz#0ac11f7938a8f245a39ca34498efd5ac11c55f98"
+  integrity sha512-LEvombZlcsOXtf80Re4MwB05zJozcyvGyt+azotTPaQGHHcvzKF+7Wkkb/8UKT47UiYlrdcD8J904GjGnnb27g==
+  dependencies:
+    schema-utils "^3.0.0"
+
 webpack-sources@^1.4.3:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-1.4.3.tgz#eedd8ec0b928fbf1cbfe994e22d2d890f330a933"

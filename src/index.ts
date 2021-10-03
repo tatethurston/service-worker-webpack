@@ -1,7 +1,5 @@
 import { join } from "path";
 import { validate } from "schema-utils";
-import webpack from "webpack";
-import type { Compiler, Configuration } from "webpack";
 import {
   GenerateSW,
   GenerateSWOptions,
@@ -10,6 +8,8 @@ import {
 } from "workbox-webpack-plugin";
 import CopyPlugin from "copy-webpack-plugin";
 import { Schema } from "schema-utils/declarations/ValidationError";
+import webpack, { Compiler } from "webpack";
+import InjectEntryPlugin from "webpack-inject-entry-plugin";
 
 export interface ServiceWorkerConfig {
   /**
@@ -122,79 +122,7 @@ function isInjectManifest(
   return "swSrc" in workboxConfig;
 }
 
-/* eslint-disable */
-function injectEntryWebpack5Compat(
-  options: Compiler["options"],
-  entryName: string,
-  inject: string
-): void {
-  const entry: any =
-    typeof options.entry === "function"
-      ? options.entry()
-      : Promise.resolve(options.entry);
-
-  options.entry = () =>
-    entry.then((e: any) => {
-      const injectEntry: typeof e[string] | undefined = e[entryName];
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (!injectEntry?.import) {
-        throw new Error(
-          `Could not find the webpack entry '${entryName}' to inject autoRegister code into. See https://github.com/tatethurston/service-worker-webpack for configuration options.`
-        );
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (!injectEntry.import.includes(inject)) {
-        injectEntry.import.unshift(inject);
-      }
-      return e;
-    });
-}
-/* eslint-enable */
-
-function injectEntryWebpack4Compat(
-  options: Compiler["options"],
-  entryName: string,
-  inject: string
-): void {
-  function injectEntry(
-    entry: Exclude<Configuration["entry"], webpack.EntryFunc>
-  ): string[] | webpack.Entry {
-    switch (typeof entry) {
-      case "undefined": {
-        throw new Error(
-          `Could not find the webpack entry '${entryName}' to inject autoRegister code into. See https://github.com/tatethurston/service-worker-webpack for configuration options.`
-        );
-      }
-      case "string": {
-        return [inject, entry];
-      }
-      case "object": {
-        if (Array.isArray(entry)) {
-          if (!entry.includes(inject)) {
-            return [inject, ...entry];
-          }
-          return entry;
-        } else {
-          return {
-            ...entry,
-            [entryName]: (injectEntry(entry[entryName]) as unknown) as string[],
-          };
-        }
-      }
-      default: {
-        const _exhaust: never = entry;
-        return _exhaust;
-      }
-    }
-  }
-
-  const entry = options.entry;
-  typeof entry === "function"
-    ? (options.entry = () => Promise.resolve(entry()).then(injectEntry))
-    : (options.entry = () => injectEntry(entry));
-}
-
-export class ServiceWorkerPlugin {
+export default class ServiceWorkerPlugin {
   config: ServiceWorkerConfig;
 
   constructor(options: ServiceWorkerConfig = {}) {
@@ -236,21 +164,10 @@ export class ServiceWorkerPlugin {
         __SERVICE_WORKER_SCOPE__: JSON.stringify(scope),
       }).apply(compiler);
 
-      const autoRegisterJS = join(__dirname, "autoRegister.js");
-
-      if (!webpack.version || webpack.version.startsWith("4")) {
-        injectEntryWebpack4Compat(
-          compiler.options,
-          registrationEntry,
-          autoRegisterJS
-        );
-      } else {
-        injectEntryWebpack5Compat(
-          compiler.options,
-          registrationEntry,
-          autoRegisterJS
-        );
-      }
+      new InjectEntryPlugin({
+        entry: registrationEntry,
+        filepath: join(__dirname, "autoRegister.js"),
+      }).apply(compiler);
     }
 
     if (compiler.options.mode === "development" && !enableInDevelopment) {
