@@ -2547,13 +2547,14 @@ serialize-javascript@^5.0.1:
   dependencies:
     randombytes "^2.1.0"
 
-service-worker-webpack@0.0.8-alpha.0:
-  version "0.0.8-alpha.0"
-  resolved "https://registry.yarnpkg.com/service-worker-webpack/-/service-worker-webpack-0.0.8-alpha.0.tgz#211bbd6fc1fe0a19c4bd98d7e4a5c291d9f01ea9"
-  integrity sha512-ezLV5/8Rr8FAZfINmn70jZon1HMsex18o46me5ygr7hOU2L20yNzlR6Vr+5Ttr/UpN6a+Pd/6z4g19OUro00Ng==
+service-worker-webpack@0.0.9-alpha.1:
+  version "0.0.9-alpha.1"
+  resolved "https://registry.yarnpkg.com/service-worker-webpack/-/service-worker-webpack-0.0.9-alpha.1.tgz#9b4876216bff495e9fa54d78c5516439ac20d37f"
+  integrity sha512-lSg8n1wS132c596TzJ4gDehMUFiF3qkbTP0rspxGYzn4EZKMJ+7QQO2r/YdCh9yY6sMA0XDDXdD3gXyQ0Hy4tg==
   dependencies:
     copy-webpack-plugin "^6.4.1"
     schema-utils "^3.0.0"
+    webpack-inject-entry-plugin "^0.0.2"
     workbox-webpack-plugin "^6.1.5"
     workbox-window "^6.1.5"
 
@@ -2877,6 +2878,13 @@ webpack-cli@^4.6.0:
     rechoir "^0.7.0"
     v8-compile-cache "^2.2.0"
     webpack-merge "^5.7.3"
+
+webpack-inject-entry-plugin@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/webpack-inject-entry-plugin/-/webpack-inject-entry-plugin-0.0.2.tgz#0ac11f7938a8f245a39ca34498efd5ac11c55f98"
+  integrity sha512-LEvombZlcsOXtf80Re4MwB05zJozcyvGyt+azotTPaQGHHcvzKF+7Wkkb/8UKT47UiYlrdcD8J904GjGnnb27g==
+  dependencies:
+    schema-utils "^3.0.0"
 
 webpack-merge@^5.7.3:
   version "5.7.3"

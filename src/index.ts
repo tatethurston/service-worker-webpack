@@ -122,7 +122,7 @@ function isInjectManifest(
   return "swSrc" in workboxConfig;
 }
 
-export default class ServiceWorkerPlugin {
+export class ServiceWorkerPlugin {
   config: ServiceWorkerConfig;
 
   constructor(options: ServiceWorkerConfig = {}) {
