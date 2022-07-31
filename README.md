@@ -167,9 +167,9 @@ Check out the [service-worker-webpack-example](https://github.com/tatethurston/s
 
 ## Common Service Worker Pitfalls ⚠️
 
-You must serve your next application over HTTPS in production environments. [Service Workers must be served from the site's origin over HTTPS](https://developers.google.com/web/fundamentals/primers/service-workers).
+You must serve your application over HTTPS in production environments. [Service Workers must be served from the site's origin over HTTPS](https://developers.google.com/web/fundamentals/primers/service-workers).
 
-Most browsers make special case `localhost`, so this is generally not necessary during local development. HTTPS is _not_ handled by this library.
+Most browsers special case `localhost`, so this is generally not necessary during local development. HTTPS is _not_ handled by this library.
 
 The service worker origin constraint means that the service worker can not control `mysite.com` if it was served from a subdomain such as `mycdn.mysite.com`.
 
