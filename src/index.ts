@@ -1,11 +1,7 @@
 import { join } from "path";
 import { validate } from "schema-utils";
-import {
-  GenerateSW,
-  GenerateSWOptions,
-  InjectManifest,
-  InjectManifestOptions,
-} from "workbox-webpack-plugin";
+import { GenerateSW, InjectManifest } from "workbox-webpack-plugin";
+import type { GenerateSWOptions, InjectManifestOptions } from "workbox-build";
 import CopyPlugin from "copy-webpack-plugin";
 import { Schema } from "schema-utils/declarations/ValidationError";
 import webpack, { Compiler } from "webpack";
@@ -136,7 +132,7 @@ export class ServiceWorkerPlugin {
   apply(compiler: Compiler): void {
     const DEFAULT_SW_NAME = "service-worker.js";
     const DEFAULT_SW_DEST = join(
-      compiler.options.output?.path ?? "",
+      compiler.options.output.path ?? "",
       DEFAULT_SW_NAME
     );
     // https://webpack.js.org/concepts/entry-points/#single-entry-shorthand-syntax
@@ -145,7 +141,6 @@ export class ServiceWorkerPlugin {
     const {
       enableInDevelopment = false,
       enableWorkboxLogging = undefined,
-      workbox = {},
       registration: {
         entry: registrationEntry = DEFAULT_ENTRY,
         path = `/${DEFAULT_SW_NAME}`,
@@ -154,9 +149,8 @@ export class ServiceWorkerPlugin {
       } = {},
     } = this.config;
 
-    if (!workbox.swDest) {
-      workbox.swDest = DEFAULT_SW_DEST;
-    }
+    const workbox: InjectManifestOptions | GenerateSWOptions = this.config
+      .workbox ?? { swDest: DEFAULT_SW_DEST };
 
     if (autoRegister) {
       new webpack.DefinePlugin({
@@ -178,9 +172,7 @@ export class ServiceWorkerPlugin {
             to: workbox.swDest,
           },
         ],
-        // TODO: Look into type definition mismatch
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      }).apply(compiler as any);
+      }).apply(compiler);
     } else {
       if (isInjectManifest(workbox)) {
         new InjectManifest(workbox).apply(compiler);
