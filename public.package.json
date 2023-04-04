@@ -11,7 +11,7 @@
   "bugs": {
     "url": "https://github.com/tatethurston/service-worker-webpack/issues"
   },
-  "version": "1.0.1",
+  "version": "1.0.0",
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
