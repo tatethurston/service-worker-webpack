@@ -1,7 +1,10 @@
 import { join } from "path";
 import { validate } from "schema-utils";
 import { GenerateSW, InjectManifest } from "workbox-webpack-plugin";
-import type { GenerateSWOptions, InjectManifestOptions } from "workbox-build";
+import type {
+  WebpackGenerateSWOptions,
+  WebpackInjectManifestOptions,
+} from "workbox-build";
 import CopyPlugin from "copy-webpack-plugin";
 import { Schema } from "schema-utils/declarations/ValidationError";
 import webpack, { Compiler } from "webpack";
@@ -75,7 +78,7 @@ export interface ServiceWorkerConfig {
    *
    * Defaults to `GenerateSW` which will generate a service worker with the workbox runtime included.
    */
-  workbox?: InjectManifestOptions | GenerateSWOptions;
+  workbox?: WebpackInjectManifestOptions | WebpackGenerateSWOptions;
 }
 
 const schema: Schema = {
@@ -113,8 +116,8 @@ const schema: Schema = {
 };
 
 function isInjectManifest(
-  workboxConfig: InjectManifestOptions | GenerateSWOptions
-): workboxConfig is InjectManifestOptions {
+  workboxConfig: WebpackInjectManifestOptions | WebpackGenerateSWOptions
+): workboxConfig is WebpackInjectManifestOptions {
   return "swSrc" in workboxConfig;
 }
 
@@ -149,8 +152,17 @@ export class ServiceWorkerPlugin {
       } = {},
     } = this.config;
 
-    const workbox: InjectManifestOptions | GenerateSWOptions = this.config
-      .workbox ?? { swDest: DEFAULT_SW_DEST };
+    const defaults: WebpackGenerateSWOptions = {
+      cleanupOutdatedCaches: true,
+      clientsClaim: true,
+      exclude: [/\.map$/, /^manifest.*\.js$/, /\.txt$/, /\.d\.ts$/],
+      skipWaiting: true,
+      sourcemap: false,
+      swDest: DEFAULT_SW_DEST,
+    };
+
+    const workbox: WebpackInjectManifestOptions | WebpackGenerateSWOptions =
+      this.config.workbox ?? defaults;
 
     if (autoRegister) {
       new webpack.DefinePlugin({
@@ -183,7 +195,7 @@ export class ServiceWorkerPlugin {
         } else if (enableWorkboxLogging === false) {
           mode = "production";
         }
-        new GenerateSW({ mode, ...workbox }).apply(compiler);
+        new GenerateSW({ mode, ...defaults, ...workbox }).apply(compiler);
       }
     }
   }

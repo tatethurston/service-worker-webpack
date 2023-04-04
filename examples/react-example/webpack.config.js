@@ -1,5 +1,6 @@
 const path = require("path");
 const { ServiceWorkerPlugin } = require("service-worker-webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.tsx",
@@ -18,12 +19,12 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js"],
   },
   output: {
-    filename: "main.js",
+    filename: "[name].[contenthash].js",
     path: path.resolve(__dirname, "dist"),
+    clean: true,
   },
   plugins: [
-    new ServiceWorkerPlugin({
-      enableWorkboxLogging: true,
-    }),
+    new HtmlWebpackPlugin({ template: "./src/index.html" }),
+    new ServiceWorkerPlugin(),
   ],
 };

@@ -1,4 +1,2 @@
 node_modules
-dist/*
-examples/*/dist/*
-!examples/*/dist/index.html
+dist
