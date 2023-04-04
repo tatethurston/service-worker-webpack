@@ -7,7 +7,7 @@
 <a href="https://www.npmjs.com/package/service-worker-webpack">
   <img src="https://img.shields.io/npm/v/service-worker-webpack.svg">
 </a>
-<a href="https://github.com/tatethurston/service-worker-webpack/blob/master/LICENSE">
+<a href="https://github.com/tatethurston/service-worker-webpack/blob/main/LICENSE">
   <img src="https://img.shields.io/npm/l/service-worker-webpack.svg">
 </a>
 <a href="https://www.npmjs.com/package/service-worker-webpack">
@@ -46,9 +46,28 @@ Compatible with Webpack 4 and Webpack 5.
 
 ## Verification 🤔
 
-1. To view the production service worker, run `next build && next start`.
+1. To view the production service worker, set your [webpack mode](https://webpack.js.org/configuration/mode/) to `production` and build your assets.
 2. The service worker must first install before it intercepts any traffic. You can view the status of the service worker in Chrome by opening the dev console, clicking the `Application` tab and then clicking the `Service Workers` tab.
 3. Disable your internet connection and click around your site. Your assets will be served by the service worker. This is most obvious when you are disconnected from the internet, but even when users have an internet connection your assets will be served from the service worker and not from the network -- markedly speeding up these requests.
+
+## Examples 🚀
+
+Check out the [service-worker-webpack-example](https://github.com/tatethurston/service-worker-webpack/blob/main/examples/react-example/).
+
+## Common Service Worker Pitfalls ⚠️
+
+You must serve your application over HTTPS in production environments. [Service Workers must be served from the site's origin over HTTPS](https://developers.google.com/web/fundamentals/primers/service-workers).
+
+Some browsers special case `localhost`, so this may not be necessary during local development. HTTPS is _not_ handled by this library. You can use a reverse proxy like [Nginx](https://www.nginx.com/) or [Caddy](https://caddyserver.com/) if you want to setup HTTPS for local development.
+
+The service worker origin constraint means that service workers can not control pages on a different subdomain. Eg `mysite.com` can not be controlled by a service worker if that was served from a subdomain such as `mycdn.mysite.com`. To learn more about how service workers work in general, read [MDN's documentation](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API).
+
+## Motivation
+
+Workbox is great -- it's well documented and straightforward to customize your service worker. [workbox-webpack-plugin](https://www.npmjs.com/package/workbox-webpack-plugin) makes caching your webpack assets simple, but I found myself reimplementing the same patterns across projects. Specifically:
+
+- Wiring up service worker registration boilerplate
+- Toggling service worker development on/off in development
 
 ## API Overview 🛠
 
@@ -167,29 +186,10 @@ Defaults to `GenerateSW` which will generate a service worker with the workbox r
   </tbody>
 </table>
 
-## Examples 🚀
-
-Check out the [service-worker-webpack-example](https://github.com/tatethurston/service-worker-webpack/blob/master/examples/react-example/).
-
-## Common Service Worker Pitfalls ⚠️
-
-You must serve your application over HTTPS in production environments. [Service Workers must be served from the site's origin over HTTPS](https://developers.google.com/web/fundamentals/primers/service-workers).
-
-Some browsers special case `localhost`, so this may not be necessary during local development. HTTPS is _not_ handled by this library. You can use a reverse proxy like [Nginx](https://www.nginx.com/) or [Caddy](https://caddyserver.com/) if you want to setup HTTPS for local development.
-
-The service worker origin constraint means that service workers can not control pages on a different subdomain. Eg `mysite.com` can not be controlled by a service worker if that was served from a subdomain such as `mycdn.mysite.com`. To learn more about how service workers work in general, read [MDN's documentation](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API).
-
-## Motivation
-
-Workbox is great -- it's well documented and straightforward to customize your service worker. [workbox-webpack-plugin](https://www.npmjs.com/package/workbox-webpack-plugin) makes caching your webpack assets simple, but I found myself reimplementing the same patterns across projects. Specifically:
-
-- Wiring up service worker registration boilerplate
-- Toggling service worker development on/off in development
-
 ## Contributing 👫
 
-PR's and issues welcomed! For more guidance check out [CONTRIBUTING.md](https://github.com/tatethurston/service-worker-webpack/blob/master/CONTRIBUTING.md)
+PR's and issues welcomed! For more guidance check out [CONTRIBUTING.md](https://github.com/tatethurston/service-worker-webpack/blob/main/CONTRIBUTING.md)
 
 ## Licensing 📃
 
-See the project's [MIT License](https://github.com/tatethurston/service-worker-webpack/blob/master/LICENSE).
+See the project's [MIT License](https://github.com/tatethurston/service-worker-webpack/blob/main/LICENSE).
