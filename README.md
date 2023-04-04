@@ -1,6 +1,6 @@
 # service-worker-webpack
 
-<blockquote>A Webpack Plugin to generate a Service Worker. Powered by Workbox.</blockquote>
+<blockquote>A Webpack plugin that generates a Service Worker. Powered by Workbox.</blockquote>
 
 <br />
 
@@ -20,29 +20,35 @@ A minimal wrapper around [Workbox](https://developers.google.com/web/tools/workb
 
 Compatible with Webpack 4 and Webpack 5.
 
-## Motivation
-
-Workbox is great -- it's well documented and straightforward to customize your service worker. [workbox-webpack-plugin](https://www.npmjs.com/package/workbox-webpack-plugin) makes caching your webpack assets simple, but I found myself reimplementing the same patterns across projects. Specifically:
-
-- Wiring up service worker registration boilerplate
-- Toggling service worker development on/off in development
-- Toggling Workbox logging on/off when debugging
-
 ## Installation & Usage 📦
 
 1. Add this package to your project:
 
-   `yarn add -D service-worker-webpack`
+   - `npm install --save dev service-worker-webpack` or `yarn add --dev service-worker-webpack`
 
 2. Update your `webpack.config.js`:
 
-   ```js
-   const { ServiceWorkerPlugin } = require("service-worker-webpack");
+   ```diff
+   const path = require('path');
+   + const { ServiceWorkerPlugin } = require("service-worker-webpack");
 
    module.exports = {
-     plugins: [new ServiceWorkerPlugin()],
+     entry: './src/index.js',
+     output: {
+       filename: 'main.js',
+       path: path.resolve(__dirname, 'dist'),
+     },
+   + plugins: [new ServiceWorkerPlugin()],
    };
    ```
+
+3. That's it! A service worker that precaches all of your build's static assets will be generated. Static assets will be served from the service worker's cache instead of making network calls, speeding up your page views and enabling offline viewing 🙌.
+
+## Verification 🤔
+
+1. To view the production service worker, run `next build && next start`.
+2. The service worker must first install before it intercepts any traffic. You can view the status of the service worker in Chrome by opening the dev console, clicking the `Application` tab and then clicking the `Service Workers` tab.
+3. Disable your internet connection and click around your site. Your assets will be served by the service worker. This is most obvious when you are disconnected from the internet, but even when users have an internet connection your assets will be served from the service worker and not from the network -- markedly speeding up these requests.
 
 ## API Overview 🛠
 
@@ -169,9 +175,16 @@ Check out the [service-worker-webpack-example](https://github.com/tatethurston/s
 
 You must serve your application over HTTPS in production environments. [Service Workers must be served from the site's origin over HTTPS](https://developers.google.com/web/fundamentals/primers/service-workers).
 
-Most browsers special case `localhost`, so this is generally not necessary during local development. HTTPS is _not_ handled by this library.
+Some browsers special case `localhost`, so this may not be necessary during local development. HTTPS is _not_ handled by this library. You can use a reverse proxy like [Nginx](https://www.nginx.com/) or [Caddy](https://caddyserver.com/) if you want to setup HTTPS for local development.
 
-The service worker origin constraint means that the service worker can not control `mysite.com` if it was served from a subdomain such as `mycdn.mysite.com`.
+The service worker origin constraint means that service workers can not control pages on a different subdomain. Eg `mysite.com` can not be controlled by a service worker if that was served from a subdomain such as `mycdn.mysite.com`. To learn more about how service workers work in general, read [MDN's documentation](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API).
+
+## Motivation
+
+Workbox is great -- it's well documented and straightforward to customize your service worker. [workbox-webpack-plugin](https://www.npmjs.com/package/workbox-webpack-plugin) makes caching your webpack assets simple, but I found myself reimplementing the same patterns across projects. Specifically:
+
+- Wiring up service worker registration boilerplate
+- Toggling service worker development on/off in development
 
 ## Contributing 👫
 

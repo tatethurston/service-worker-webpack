@@ -4,7 +4,7 @@ import { Workbox } from "workbox-window";
 if ("serviceWorker" in navigator) {
   // eslint-disable-next-line no-undef
   const wb = new Workbox(__SERVICE_WORKER_SW_DEST__, {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,no-undef
+    // eslint-disable-next-line no-undef
     scope: __SERVICE_WORKER_SCOPE__,
   });
   // eslint-disable-next-line @typescript-eslint/no-floating-promises

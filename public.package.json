@@ -1,0 +1,36 @@
+{
+  "name": "service-worker-webpack",
+  "description": "A Webpack Plugin to generate a Service Worker. Powered by Workbox",
+  "license": "MIT",
+  "author": "Tate <tatethurston@gmail.com>",
+  "homepage": "https://github.com/tatethurston/service-worker-webpack#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tatethurston/service-worker-webpack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tatethurston/service-worker-webpack/issues"
+  },
+  "version": "1.0.1",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "dependencies": {
+    "copy-webpack-plugin": "^11.0.0",
+    "schema-utils": "^4.0.0",
+    "webpack-inject-entry-plugin": "^0.0.4",
+    "workbox-build": "^6.5.4",
+    "workbox-webpack-plugin": "^6.5.4",
+    "workbox-window": "^6.5.4"
+  },
+  "peerDependencies": {
+    "webpack": "^4.37.0 || ^5.9.0"
+  },
+  "keywords": [
+    "offline",
+    "plugin",
+    "pwa",
+    "service worker",
+    "webpack",
+    "workbox"
+  ]
+}
